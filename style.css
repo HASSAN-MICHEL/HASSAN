@@ -1,82 +1,203 @@
 /* Police moderne */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* Variables CSS pour le mode clair */
+:root {
+  /* Couleurs */
+  --primary-color: #3498db;
+  --secondary-color: #2c3e50;
+  --background-color: #ffffff;
+  --sidebar-color: #f8f9fa;
+  --card-color: #ffffff;
+  --text-color: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --border-color: #e9ecef;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --grid-color: #f0f0f0;
+  --success-color: #2ecc71;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+  
+  /* Espacements */
+  --spacing-unit: 8px;
+  
+  /* Effets */
+  --shadow-default: 0 2px 10px var(--shadow-color);
+  --shadow-card: 0 4px 6px var(--shadow-color);
+}
+
+/* Variables CSS pour le mode sombre */
+[data-theme="dark"] {
+  --primary-color: #3498db;
+  --secondary-color: #1abc9c;
+  --background-color: #1E1E1E;
+  --sidebar-color: #2D2D2D;
+  --card-color: #2D2D2D;
+  --text-color: #FFFFFF;
+  --text-secondary: #B0B0B0;
+  --border-color: #444444;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --grid-color: #333333;
+}
+
+/* Styles de base */
 html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-    background-color: white;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* En-tête */
 .stApp header {
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background-color: var(--background-color);
+  box-shadow: var(--shadow-default);
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* Sidebar */
 .css-1d391kg {
-    background-color: #f8f9fa;
-    border-right: 1px solid #e9ecef;
+  background-color: var(--sidebar-color) !important;
+  border-right: 1px solid var(--border-color);
 }
 
 /* Titres */
 h1 {
-    color: #2c3e50 !important;
-    font-weight: 600 !important;
+  color: var(--secondary-color) !important;
+  font-weight: 700 !important;
+  margin-bottom: calc(var(--spacing-unit) * 2) !important;
 }
 
 h2 {
-    color: #3498db !important;
-    font-weight: 500 !important;
+  color: var(--primary-color) !important;
+  font-weight: 600 !important;
+  margin-bottom: var(--spacing-unit) !important;
+}
+
+h3 {
+  color: var(--text-color) !important;
+  font-weight: 500 !important;
 }
 
 /* Cartes métriques */
 .stMetric {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  background-color: var(--card-color);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-color);
 }
 
 .stMetric label {
-    font-size: 0.9rem !important;
-    color: #7f8c8d !important;
+  font-size: 0.9rem !important;
+  color: var(--text-secondary) !important;
 }
 
 .stMetric div {
-    font-size: 1.8rem !important;
-    font-weight: 600 !important;
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  color: var(--text-color) !important;
 }
 
 /* Onglets */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 10px;
+  gap: var(--spacing-unit);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .stTabs [data-baseweb="tab"] {
-    padding: 10px 20px;
-    border-radius: 8px 8px 0 0;
-    background-color: #f8f9fa;
-    transition: all 0.3s;
-    font-weight: 500;
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 3);
+  border-radius: 8px 8px 0 0;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: -1px;
 }
 
 .stTabs [aria-selected="true"] {
-    background-color: #3498db;
-    color: white;
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border-bottom: 3px solid var(--primary-color);
+}
+
+/* Boutons */
+.stButton button {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.stButton button:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-default);
 }
 
 /* Graphiques */
 svg {
-    border-radius: 8px;
+  border-radius: 8px;
+
 }
 
 /* Tooltips */
 .css-1qg05tj {
-    background-color: #2c3e50 !important;
-    color: white !important;
+  background-color: var(--secondary-color) !important;
+  color: white !important;
 }
 
 /* Sélecteurs */
 .st-bd, .st-bc, .st-b8, .st-b6 {
-    border-radius: 8px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Tableaux */
+.stTable {
+  background-color: var(--card-color) !important;
+}
+
+/* Grid */
+.stPlotlyChart .gridlayer .ygrid, 
+.stPlotlyChart .gridlayer .xgrid {
+  stroke: var(--grid-color) !important;
+}
+
+/* Texte */
+p, li, td {
+  color: var(--text-color) !important;
+}
+
+/* Alertes */
+.stAlert {
+  background-color: var(--card-color) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Mode sombre spécifique */
+[data-theme="dark"] {
+  /* Correction pour les graphiques Plotly */
+  .js-plotly-plot .plotly .modebar {
+    background-color: var(--card-color) !important;
+  }
+  
+  /* Correction pour les tooltips */
+  .stTooltip {
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+  }
+  
+  /* Correction pour les sélecteurs */
+  .st-bd, .st-bc, .st-b8, .st-b6 {
+    background-color: var(--card-color) !important;
+    color: var(--text-color) !important;
+  }
+}
+
+/* Animation de transition */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
