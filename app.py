@@ -38,23 +38,14 @@ stage = load_data()
 
 # Titre de l'application
 st.title('🚗 Dashboard d\'Analyse des Ventes Automobiles')
-st.markdown("""
-    <style>
-        .title {
-            color: #2c3e50;
-            font-size: 2.5rem !important;
-        }
-        .header {
-            color: #3498db;
-            font-size: 1.5rem !important;
-        }
-    </style>
-""", unsafe_allow_html=True)
 
-# Sidebar
+# Sidebar avec switch de thème
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/000000/car--v1.png", width=80)
     st.title("Filtres")
+    
+    # Switch pour le mode sombre
+    dark_mode = st.toggle('Mode Sombre', value=False)
     
     # Filtres interactifs
     selected_years = st.multiselect(
@@ -83,6 +74,24 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("© 2023 - Analyse Ventes Auto Pro")
 
+# Appliquer le thème
+if dark_mode:
+    st.markdown("""
+    <style>
+        .stApp {
+            background-color: #1E1E1E;
+            color: #FFFFFF;
+        }
+        .css-1d391kg {
+            background-color: #2D2D2D;
+        }
+        .stMetric {
+            background-color: #2D2D2D;
+            color: #FFFFFF;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
 # Filtrage des données
 filtered_data = stage[
     (stage['Année_vente'].isin(selected_years)) & 
@@ -95,58 +104,86 @@ tab1, tab2, tab3, tab4 = st.tabs(["📊 Vue d'ensemble", "📈 Analyse des Vente
 with tab1:
     st.header("Vue Globale du Marché")
     
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric("Chiffre d'Affaires Total", f"{filtered_data['Prix_vente (€)'].sum()/1e6:.2f}M€")
-    
-    with col2:
-        st.metric("Nombre Total de Ventes", f"{len(filtered_data):,}")
-    
-    with col3:
-        st.metric("Satisfaction Moyenne", f"{filtered_data['Score_satisfaction_client (1-10)'].mean():.1f}/10")
-    
-    st.markdown("---")
-    
-    # Graphiques en ligne
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader("Évolution Annuelle des Ventes")
-        annual_sales = filtered_data.groupby('Année_vente').agg({
-            'ID_vente': 'count',
-            'Prix_vente (€)': 'sum'
-        }).rename(columns={'ID_vente': 'Ventes', 'Prix_vente (€)': 'CA'})
+    # Vérification des données filtrées
+    if filtered_data.empty:
+        st.warning("Aucune donnée ne correspond aux filtres sélectionnés. Veuillez ajuster vos critères.")
+    else:
+        col1, col2, col3 = st.columns(3)
         
-        fig, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(annual_sales.index, annual_sales['Ventes'], marker='o', color=COLOR_PALETTE[0], linewidth=2.5)
-        ax.set_title('Nombre de Ventes par Année', pad=20)
-        ax.set_ylabel('Nombre de Ventes')
-        ax.grid(True, linestyle='--', alpha=0.3)
+        with col1:
+            ca_total = filtered_data['Prix_vente (€)'].sum()/1e6
+            st.metric("Chiffre d'Affaires Total", f"{ca_total:.2f}M€")
+        
+        with col2:
+            nb_ventes = len(filtered_data)
+            st.metric("Nombre Total de Ventes", f"{nb_ventes:,}")
+        
+        with col3:
+            satisfaction = filtered_data['Score_satisfaction_client (1-10)'].mean()
+            st.metric("Satisfaction Moyenne", f"{satisfaction:.1f}/10")
+        
+        st.markdown("---")
+        
+        # Graphiques en ligne
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.subheader("Évolution Annuelle des Ventes")
+            annual_sales = filtered_data.groupby('Année_vente').agg({
+                'ID_vente': 'count',
+                'Prix_vente (€)': 'sum'
+            }).rename(columns={'ID_vente': 'Ventes', 'Prix_vente (€)': 'CA'})
+            
+            fig, ax = plt.subplots(figsize=(10, 5))
+            ax.plot(annual_sales.index, annual_sales['Ventes'], marker='o', color=COLOR_PALETTE[0], linewidth=2.5)
+            ax.set_title('Nombre de Ventes par Année', pad=20)
+            ax.set_ylabel('Nombre de Ventes')
+            ax.grid(True, linestyle='--', alpha=0.3)
+            if dark_mode:
+                ax.set_facecolor('#2D2D2D')
+                fig.patch.set_facecolor('#1E1E1E')
+                ax.tick_params(colors='white')
+                ax.xaxis.label.set_color('white')
+                ax.yaxis.label.set_color('white')
+                ax.title.set_color('white')
+            st.pyplot(fig)
+        
+        with col2:
+            st.subheader("Évolution Annuelle du CA")
+            fig, ax = plt.subplots(figsize=(10, 5))
+            ax.plot(annual_sales.index, annual_sales['CA']/1e6, marker='o', color=COLOR_PALETTE[1], linewidth=2.5)
+            ax.set_title('Chiffre d\'Affaires par Année (M€)', pad=20)
+            ax.set_ylabel('CA (M€)')
+            ax.grid(True, linestyle='--', alpha=0.3)
+            if dark_mode:
+                ax.set_facecolor('#2D2D2D')
+                fig.patch.set_facecolor('#1E1E1E')
+                ax.tick_params(colors='white')
+                ax.xaxis.label.set_color('white')
+                ax.yaxis.label.set_color('white')
+                ax.title.set_color('white')
+            st.pyplot(fig)
+        
+        st.markdown("---")
+        
+        # Top marques
+        st.subheader("Top 10 des Marques les Plus Vendues")
+        top_brands = filtered_data['Marque'].value_counts().head(10)
+        
+        fig, ax = plt.subplots(figsize=(12, 6))
+        sns.barplot(x=top_brands.values, y=top_brands.index, hue=top_brands.index, palette="Blues_d", legend=False)
+        ax.set_title('Top 10 des Marques', pad=20)
+        ax.set_xlabel('Nombre de Ventes')
+        ax.set_ylabel('')
+        ax.bar_label(ax.containers[0], fmt='%g', padding=3)
+        if dark_mode:
+            ax.set_facecolor('#2D2D2D')
+            fig.patch.set_facecolor('#1E1E1E')
+            ax.tick_params(colors='white')
+            ax.xaxis.label.set_color('white')
+            ax.yaxis.label.set_color('white')
+            ax.title.set_color('white')
         st.pyplot(fig)
-    
-    with col2:
-        st.subheader("Évolution Annuelle du CA")
-        fig, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(annual_sales.index, annual_sales['CA']/1e6, marker='o', color=COLOR_PALETTE[1], linewidth=2.5)
-        ax.set_title('Chiffre d\'Affaires par Année (M€)', pad=20)
-        ax.set_ylabel('CA (M€)')
-        ax.grid(True, linestyle='--', alpha=0.3)
-        st.pyplot(fig)
-    
-    st.markdown("---")
-    
-    # Top marques
-    st.subheader("Top 10 des Marques les Plus Vendues")
-    top_brands = filtered_data['Marque'].value_counts().head(10)
-    
-    fig, ax = plt.subplots(figsize=(12, 6))
-    sns.barplot(x=top_brands.values, y=top_brands.index, palette="Blues_d")
-    ax.set_title('Top 10 des Marques', pad=20)
-    ax.set_xlabel('Nombre de Ventes')
-    ax.set_ylabel('')
-    ax.bar_label(ax.containers[0], fmt='%g', padding=3)
-    st.pyplot(fig)
 
 with tab2:
     st.header("Analyse Détailée des Ventes")
@@ -347,6 +384,6 @@ with tab4:
 st.markdown("---")
 st.markdown("""
 <div style="text-align:center;color:#666;font-size:0.9rem;">
-    Dashboard développé avec Streamlit | Données: STAGE.xlsx | © 2023
+    Dashboard de vente de voiture deployé par HM
 </div>
 """, unsafe_allow_html=True)
