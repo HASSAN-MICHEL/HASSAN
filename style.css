@@ -1,0 +1,81 @@
+/* Police moderne */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* En-tête */
+.stApp header {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Sidebar */
+.css-1d391kg {
+    background-color: #f8f9fa;
+    border-right: 1px solid #e9ecef;
+}
+
+/* Titres */
+h1 {
+    color: #2c3e50 !important;
+    font-weight: 600 !important;
+}
+
+h2 {
+    color: #3498db !important;
+    font-weight: 500 !important;
+}
+
+/* Cartes métriques */
+.stMetric {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.stMetric label {
+    font-size: 0.9rem !important;
+    color: #7f8c8d !important;
+}
+
+.stMetric div {
+    font-size: 1.8rem !important;
+    font-weight: 600 !important;
+}
+
+/* Onglets */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 10px;
+}
+
+.stTabs [data-baseweb="tab"] {
+    padding: 10px 20px;
+    border-radius: 8px 8px 0 0;
+    background-color: #f8f9fa;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Graphiques */
+svg {
+    border-radius: 8px;
+}
+
+/* Tooltips */
+.css-1qg05tj {
+    background-color: #2c3e50 !important;
+    color: white !important;
+}
+
+/* Sélecteurs */
+.st-bd, .st-bc, .st-b8, .st-b6 {
+    border-radius: 8px !important;
+}
